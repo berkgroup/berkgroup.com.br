@@ -537,7 +537,7 @@
 
     .contato-item-text span { color: var(--gray); }
 
-    form { display: flex; flex-direction: column; gap: 16px; }
+ { display: flex; flex-direction: column; gap: 16px; }
 
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
@@ -847,22 +847,43 @@
       </div>
     </div>
 
-    <form onsubmit="return false;">
+    <form id="contato-form" onsubmit="enviarWhatsApp(event)">
       <div class="form-row">
-        <input type="text" placeholder="Seu nome" required>
-        <input type="tel" placeholder="WhatsApp">
+        <input id="f-nome" type="text" placeholder="Seu nome" required>
+        <input id="f-tel" type="tel" placeholder="WhatsApp">
       </div>
-      <input type="email" placeholder="E-mail">
-      <select>
+      <input id="f-email" type="email" placeholder="E-mail">
+      <select id="f-tipo">
         <option value="" disabled selected>Qual consórcio te interessa?</option>
         <option>Imobiliário</option>
         <option>Veículos</option>
         <option>Serviços</option>
         <option>Tenho dúvidas</option>
       </select>
-      <textarea placeholder="Conte um pouco sobre seu objetivo..."></textarea>
-      <button type="submit" class="btn-submit">Enviar mensagem</button>
+      <textarea id="f-msg" placeholder="Conte um pouco sobre seu objetivo..."></textarea>
+      <button type="submit" class="btn-submit">Enviar pelo WhatsApp</button>
     </form>
+
+    <script>
+    function enviarWhatsApp(e) {
+      e.preventDefault();
+      const nome  = document.getElementById('f-nome').value.trim();
+      const tel   = document.getElementById('f-tel').value.trim();
+      const email = document.getElementById('f-email').value.trim();
+      const tipo  = document.getElementById('f-tipo').value;
+      const msg   = document.getElementById('f-msg').value.trim();
+
+      let texto = `Olá! Vim pelo site da Berk Group e gostaria de saber mais sobre consórcios Embracon. 😊\n\n`;
+      texto += `*Nome:* ${nome}\n`;
+      if (tipo)  texto += `*Interesse:* ${tipo}\n`;
+      if (tel)   texto += `*Telefone:* ${tel}\n`;
+      if (email) texto += `*E-mail:* ${email}\n`;
+      if (msg)   texto += `\n*Mensagem:* ${msg}`;
+
+      const url = `https://wa.me/5511985876570?text=${encodeURIComponent(texto)}`;
+      window.open(url, '_blank');
+    }
+    </script>
   </div>
 </section>
 
@@ -875,7 +896,7 @@
     </svg>
     <span class="logo-text">Berk<span style="color:#c9a84c">Group</span></span>
   </div>
-  <span>© 2025 Berk Group · Parceiro Oficial Embracon</span>
+  <span>© 2026 Berk Group · Parceiro Oficial Embracon</span>
   <span>berkgroup.com.br</span>
 </footer>
 
