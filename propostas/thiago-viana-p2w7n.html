@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consórcio de Imóvel — R$ 1.000.000</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --verde: #0F6E56;
+    --verde-claro: #E1F5EE;
+    --verde-medio: #1D9E75;
+    --vermelho: #C0392B;
+    --vermelho-claro: #FDECEA;
+    --cinza: #2C2C2A;
+    --cinza-medio: #5F5E5A;
+    --cinza-claro: #F1EFE8;
+    --cinza-borda: #D3D1C7;
+    --amber: #BA7517;
+    --amber-claro: #FAEEDA;
+    --azul: #185FA5;
+    --azul-claro: #E6F1FB;
+    --branco: #FFFFFF;
+    --fonte-display: 'DM Serif Display', Georgia, serif;
+    --fonte-corpo: 'DM Sans', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--fonte-corpo);
+    background: #F7F5F0;
+    color: var(--cinza);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--branco);
+    border-bottom: 1px solid var(--cinza-borda);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 56px;
+  }
+  .nav-logo {
+    font-family: var(--fonte-display);
+    font-size: 18px;
+    color: var(--verde);
+    letter-spacing: -0.3px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--cinza-medio);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--verde); }
+
+  /* HERO */
+  .hero {
+    background: var(--cinza);
+    color: var(--branco);
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 80px,
+      rgba(255,255,255,0.02) 80px,
+      rgba(255,255,255,0.02) 81px
+    );
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--verde);
+    color: var(--branco);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: var(--fonte-display);
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+    letter-spacing: -1px;
+  }
+  .hero h1 em {
+    color: var(--verde-medio);
+    font-style: italic;
+  }
+  .hero p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.65);
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    max-width: 720px;
+    margin: 0 auto;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .hero-stat {
+    flex: 1;
+    min-width: 140px;
+    padding: 1.5rem 1rem;
+    border-right: 1px solid rgba(255,255,255,0.12);
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat .valor {
+    font-family: var(--fonte-display);
+    font-size: 1.8rem;
+    color: var(--branco);
+    display: block;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .hero-stat .label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+  }
+
+  /* SEÇÕES */
+  section {
+    padding: 4rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .section-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--verde);
+    margin-bottom: 0.5rem;
+  }
+  h2 {
+    font-family: var(--fonte-display);
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.5px;
+  }
+  .section-desc {
+    font-size: 1rem;
+    color: var(--cinza-medio);
+    max-width: 560px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  hr.divider {
+    border: none;
+    border-top: 1px solid var(--cinza-borda);
+    margin: 0;
+  }
+
+  /* CARDS GENÉRICOS */
+  .card {
+    background: var(--branco);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  /* MECÂNICA — FLUXO */
+  .fluxo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--branco);
+    margin-bottom: 2rem;
+  }
+  .fluxo-passo {
+    padding: 1.5rem 1.25rem;
+    border-right: 1px solid var(--cinza-borda);
+    position: relative;
+  }
+  .fluxo-passo:last-child { border-right: none; }
+  .fluxo-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--verde);
+    color: var(--branco);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+  }
+  .fluxo-titulo {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cinza);
+    margin-bottom: 4px;
+  }
+  .fluxo-desc {
+    font-size: 13px;
+    color: var(--cinza-medio);
+    line-height: 1.5;
+  }
+  .fluxo-dest {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--verde);
+    margin-top: 6px;
+  }
+
+  /* LANCE — GRID */
+  .lance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--cinza-borda);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .lance-bloco {
+    background: var(--branco);
+    padding: 1.5rem;
+  }
+  .lance-bloco.destaque { background: var(--verde-claro); }
+  .lance-bloco .lbl { font-size: 12px; color: var(--cinza-medio); font-weight: 500; margin-bottom: 6px; }
+  .lance-bloco .val {
+    font-family: var(--fonte-display);
+    font-size: 1.6rem;
+    color: var(--cinza);
+    line-height: 1.1;
+  }
+  .lance-bloco.destaque .val { color: var(--verde); }
+  .lance-bloco .sub { font-size: 12px; color: var(--cinza-medio); margin-top: 4px; }
+
+  /* MÉTRICA CARDS */
+  .metrica-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .metrica {
+    background: var(--branco);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+  .metrica .m-label { font-size: 12px; color: var(--cinza-medio); margin-bottom: 6px; font-weight: 500; }
+  .metrica .m-val { font-family: var(--fonte-display); font-size: 1.5rem; color: var(--cinza); line-height: 1.1; }
+  .metrica .m-sub { font-size: 11px; color: var(--cinza-medio); margin-top: 4px; }
+  .metrica.verde { border-color: var(--verde); background: var(--verde-claro); }
+  .metrica.verde .m-val { color: var(--verde); }
+  .metrica.amber { border-color: var(--amber); background: var(--amber-claro); }
+  .metrica.amber .m-val { color: var(--amber); }
+
+  /* COMPARATIVO */
+  .comp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 2rem;
+  }
+  .comp-card {
+    border: 1px solid var(--cinza-borda);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--branco);
+  }
+  .comp-card.destaque { border-color: var(--verde); border-width: 2px; }
+  .comp-header {
+    padding: 1rem 1.25rem 0.75rem;
+    border-bottom: 1px solid var(--cinza-borda);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .comp-nome { font-weight: 600; font-size: 15px; }
+  .comp-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+  .badge-verde { background: var(--verde-claro); color: var(--verde); }
+  .badge-vermelho { background: var(--vermelho-claro); color: var(--vermelho); }
+  .comp-body { padding: 1.25rem; }
+  .comp-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--cinza-claro);
+    font-size: 13px;
+  }
+  .comp-item:last-child { border-bottom: none; }
+  .comp-item .ci-label { color: var(--cinza-medio); }
+  .comp-item .ci-val { font-weight: 600; color: var(--cinza); }
+  .comp-item .ci-val.bom { color: var(--verde); }
+  .comp-item .ci-val.ruim { color: var(--vermelho); }
+
+  /* TABELA PRAZOS */
+  .tabela-wrap { overflow-x: auto; margin-bottom: 2rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--branco); border-radius: 12px; overflow: hidden; border: 1px solid var(--cinza-borda); }
+  thead tr { background: var(--cinza-claro); }
+  th { padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px; color: var(--cinza-medio); letter-spacing: 0.3px; }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--cinza-claro); }
+  tr:last-child td { border-bottom: none; }
+  tr.rec td { background: var(--verde-claro); }
+  tr.rec td:first-child { border-left: 3px solid var(--verde); }
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+
+  /* TIMELINE AMORT */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--cinza-borda);
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  .tl-dot {
+    position: absolute;
+    left: -1.75rem;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--branco);
+  }
+  .tl-dot.verde { background: var(--verde); }
+  .tl-dot.amber { background: var(--amber); }
+  .tl-dot.azul { background: var(--azul); }
+  .tl-titulo { font-size: 14px; font-weight: 600; color: var(--cinza); margin-bottom: 2px; }
+  .tl-desc { font-size: 13px; color: var(--cinza-medio); }
+  .tl-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--cinza-claro);
+    color: var(--cinza-medio);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+  }
+
+  /* OBJEÇÕES */
+  .obj-lista { display: flex; flex-direction: column; gap: 12px; margin-bottom: 2rem; }
+  .obj-item {
+    background: var(--branco);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 10px;
+    padding: 1.25rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+  .obj-icone {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .obj-icone.duvida { background: var(--amber-claro); }
+  .obj-icone.resposta { background: var(--verde-claro); }
+  .obj-pergunta { font-size: 13px; font-weight: 600; color: var(--cinza); margin-bottom: 4px; }
+  .obj-resposta { font-size: 13px; color: var(--cinza-medio); line-height: 1.6; }
+
+  /* CHART WRAPPER */
+  .chart-wrap { position: relative; width: 100%; margin-bottom: 2rem; }
+
+  /* CTA FINAL */
+  .cta {
+    background: var(--cinza);
+    color: var(--branco);
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+  .cta h2 {
+    font-family: var(--fonte-display);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    color: var(--branco);
+    margin-bottom: 1rem;
+  }
+  .cta p { color: rgba(255,255,255,0.6); font-weight: 300; margin-bottom: 2rem; font-size: 1rem; }
+  .cta-btn {
+    display: inline-block;
+    background: var(--verde);
+    color: var(--branco);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    letter-spacing: 0.2px;
+    transition: background 0.2s;
+  }
+  .cta-btn:hover { background: var(--verde-medio); }
+  .cta-rodape { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 2rem; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    section { padding: 3rem 1.25rem; }
+    .lance-grid { grid-template-columns: 1fr; }
+    .comp-grid { grid-template-columns: 1fr; }
+    .hero { padding: 3.5rem 1.25rem 3rem; }
+    .hero-stats { flex-direction: column; }
+    .hero-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .hero-stat:last-child { border-bottom: none; }
+    .fluxo { grid-template-columns: 1fr; }
+    .fluxo-passo { border-right: none; border-bottom: 1px solid var(--cinza-borda); }
+    .fluxo-passo:last-child { border-bottom: none; }
+  }
+
+  /* ANIMAÇÃO ENTRADA */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Berk Group</span>
+  <ul class="nav-links">
+    <li><a href="#mecanica">Como funciona</a></li>
+    <li><a href="#numeros">Os números</a></li>
+    <li><a href="#comparativo">Vs. financiamento</a></li>
+    <li><a href="#amortizacao">Amortizações</a></li>
+    <li><a href="#objecoes">Dúvidas</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Simulação personalizada · Thiago Viana</div>
+  <h1>Seu imóvel de<br><em>R$ 1.000.000</em><br>sem juros de banco</h1>
+  <p>Consórcio com estratégia de lance embutido — contemplação rápida, parcela acessível, custo muito menor que o financiamento tradicional.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="valor">R$ 3.833</span>
+      <span class="label">parcela/mês pós-contemplação</span>
+    </div>
+    <div class="hero-stat">
+      <span class="valor">~12 meses</span>
+      <span class="label">estimativa para contemplação</span>
+    </div>
+    <div class="hero-stat">
+      <span class="valor">0%</span>
+      <span class="label">juros sobre o crédito</span>
+    </div>
+    <div class="hero-stat">
+      <span class="valor">50%</span>
+      <span class="label">menor custo vs. financiamento</span>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- MECÂNICA -->
+<section id="mecanica" class="fade-in">
+  <div class="section-tag">Como funciona</div>
+  <h2>A lógica por trás do consórcio</h2>
+  <p class="section-desc">Sem bancos, sem juros. Um grupo de pessoas contribui mensalmente e, a cada mês, um ou mais membros recebem o crédito para comprar seu bem.</p>
+
+  <div class="fluxo">
+    <div class="fluxo-passo">
+      <div class="fluxo-num">1</div>
+      <div class="fluxo-titulo">Você contrata</div>
+      <div class="fluxo-desc">Assina a cota de R$ 1.333.333 de crédito bruto. Passa a integrar o grupo Embracon.</div>
+    </div>
+    <div class="fluxo-passo">
+      <div class="fluxo-num">2</div>
+      <div class="fluxo-titulo">Oferece o lance</div>
+      <div class="fluxo-desc">Na assembleia (mês ~1 a 4), oferta lance de 50%: R$ 333k próprio + R$ 333k embutido.</div>
+      <div class="fluxo-dest">↑ Contemplação quase garantida</div>
+    </div>
+    <div class="fluxo-passo">
+      <div class="fluxo-num">3</div>
+      <div class="fluxo-titulo">Recebe o crédito</div>
+      <div class="fluxo-desc">R$ 1.000.000 líquidos liberados para comprar qualquer imóvel residencial.</div>
+    </div>
+    <div class="fluxo-passo">
+      <div class="fluxo-num">4</div>
+      <div class="fluxo-titulo">Paga as parcelas</div>
+      <div class="fluxo-desc">213 parcelas de R$ 4.172/mês. Pode amortizar com FGTS ou recurso próprio a qualquer momento.</div>
+    </div>
+  </div>
+
+  <div style="background: var(--amber-claro); border: 1px solid var(--amber); border-radius: 10px; padding: 1.25rem; display: flex; gap: 1rem; align-items: flex-start;">
+    <span style="font-size: 22px; flex-shrink:0;">💡</span>
+    <div>
+      <div style="font-weight: 600; font-size: 14px; color: var(--amber); margin-bottom: 4px;">O segredo está no lance embutido</div>
+      <div style="font-size: 13px; color: var(--cinza-medio); line-height: 1.6;">
+        O lance embutido usa parte do próprio crédito para antecipar a contemplação. Você não precisa ter o valor total no bolso — apenas os 25% de recurso próprio (R$ 333k). O resto vem da redução das suas parcelas futuras. É como uma antecipação inteligente.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- NÚMEROS -->
+<section id="numeros" class="fade-in">
+  <div class="section-tag">Os números</div>
+  <h2>Seu plano em detalhes</h2>
+  <p class="section-desc">Simulação baseada no plano Embracon SEP 240 meses com redutor "mais por menos 50%" e taxa administrativa de 18% a.a.</p>
+
+  <div class="lance-grid">
+    <div class="lance-bloco">
+      <div class="lbl">Carta de crédito bruta</div>
+      <div class="val">R$ 1.333.333</div>
+      <div class="sub">Valor contratado junto à Embracon</div>
+    </div>
+    <div class="lance-bloco destaque">
+      <div class="lbl">Crédito líquido recebido</div>
+      <div class="val">R$ 1.000.000</div>
+      <div class="sub">Após desconto do lance embutido</div>
+    </div>
+    <div class="lance-bloco">
+      <div class="lbl">Lance de recurso próprio (25%)</div>
+      <div class="val">R$ 333.333</div>
+      <div class="sub">Capital que você usa para dar o lance</div>
+    </div>
+    <div class="lance-bloco">
+      <div class="lbl">Lance embutido (25%)</div>
+      <div class="val">R$ 333.333</div>
+      <div class="sub">Descontado das suas parcelas futuras</div>
+    </div>
+  </div>
+
+  <div class="metrica-grid">
+    <div class="metrica">
+      <div class="m-label">1ª parcela (pré-contemplação)</div>
+      <div class="m-val">R$ 30.500</div>
+      <div class="m-sub">Única — cobre a diferença do redutor</div>
+    </div>
+    <div class="metrica verde">
+      <div class="m-label">Demais parcelas pré-contemplação</div>
+      <div class="m-val">R$ 3.833</div>
+      <div class="m-sub">Redutor "mais por menos 50%" ativo</div>
+    </div>
+    <div class="metrica">
+      <div class="m-label">Parcela pós-contemplação</div>
+      <div class="m-val">R$ 4.172</div>
+      <div class="m-sub">213 meses restantes</div>
+    </div>
+    <div class="metrica amber">
+      <div class="m-label">Total pago ao longo do plano</div>
+      <div class="m-val">R$ 1.520.000</div>
+      <div class="m-sub">Incluindo taxas e adesão</div>
+    </div>
+  </div>
+
+  <div class="tabela-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Prazo</th>
+          <th>Parcela líquida/mês</th>
+          <th>Custo total</th>
+          <th>Custo sobre crédito</th>
+          <th>Perfil</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>120 meses</td>
+          <td><strong>R$ 11.944</strong></td>
+          <td>R$ 1.433.333</td>
+          <td>43%</td>
+          <td><span class="pill" style="background:#F1EFE8;color:#5F5E5A;">Prazo curto</span></td>
+        </tr>
+        <tr>
+          <td>150 meses</td>
+          <td><strong>R$ 9.556</strong></td>
+          <td>R$ 1.433.333</td>
+          <td>43%</td>
+          <td><span class="pill" style="background:#E6F1FB;color:#185FA5;">Bom equilíbrio</span></td>
+        </tr>
+        <tr>
+          <td>180 meses</td>
+          <td><strong>R$ 7.963</strong></td>
+          <td>R$ 1.433.333</td>
+          <td>43%</td>
+          <td><span class="pill" style="background:#E1F5EE;color:#0F6E56;">Recomendado</span></td>
+        </tr>
+        <tr class="rec">
+          <td><strong>240 meses ★</strong></td>
+          <td><strong style="color:var(--verde)">R$ 4.172</strong></td>
+          <td><strong>R$ 1.520.000</strong></td>
+          <td><strong>52%</strong></td>
+          <td><span class="pill" style="background:#0F6E56;color:#fff;">Menor parcela</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chart-wrap" style="height: 300px;">
+    <canvas id="chartParcelas" role="img" aria-label="Comparativo de parcelas mensais por prazo do consórcio">Parcelas: 120m R$11.944, 150m R$9.556, 180m R$7.963, 240m R$4.172.</canvas>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- COMPARATIVO -->
+<section id="comparativo" class="fade-in">
+  <div class="section-tag">Comparativo</div>
+  <h2>Consórcio vs. financiamento</h2>
+  <p class="section-desc">Para o mesmo imóvel de R$ 1.000.000, veja a diferença real entre as duas opções.</p>
+
+  <div class="comp-grid">
+    <div class="comp-card destaque">
+      <div class="comp-header">
+        <span class="comp-nome" style="color:var(--verde)">Consórcio Embracon</span>
+        <span class="comp-badge badge-verde">Recomendado</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-item"><span class="ci-label">Crédito recebido</span><span class="ci-val bom">R$ 1.000.000</span></div>
+        <div class="comp-item"><span class="ci-label">Parcela mensal</span><span class="ci-val bom">R$ 4.172</span></div>
+        <div class="comp-item"><span class="ci-label">Total pago</span><span class="ci-val bom">R$ 1.520.000</span></div>
+        <div class="comp-item"><span class="ci-label">Custo efetivo</span><span class="ci-val bom">52% sobre o crédito</span></div>
+        <div class="comp-item"><span class="ci-label">Juros</span><span class="ci-val bom">Nenhum</span></div>
+        <div class="comp-item"><span class="ci-label">Taxa anual</span><span class="ci-val bom">~1% a.a. (adm + FR)</span></div>
+        <div class="comp-item"><span class="ci-label">Prazo</span><span class="ci-val">240 meses</span></div>
+        <div class="comp-item"><span class="ci-label">Contemplação estimada</span><span class="ci-val bom">~12 meses</span></div>
+        <div class="comp-item"><span class="ci-label">Uso do FGTS</span><span class="ci-val bom">Sim — amortização</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-header">
+        <span class="comp-nome">Financiamento bancário</span>
+        <span class="comp-badge badge-vermelho">Muito mais caro</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-item"><span class="ci-label">Crédito recebido</span><span class="ci-val">R$ 1.000.000</span></div>
+        <div class="comp-item"><span class="ci-label">Parcela mensal (inicial)</span><span class="ci-val ruim">R$ 8.500 – 10.500</span></div>
+        <div class="comp-item"><span class="ci-label">Total pago</span><span class="ci-val ruim">R$ 2.400.000 – 2.900.000</span></div>
+        <div class="comp-item"><span class="ci-label">Custo efetivo</span><span class="ci-val ruim">140–190% sobre o crédito</span></div>
+        <div class="comp-item"><span class="ci-label">Juros</span><span class="ci-val ruim">10–12% a.a. (CET)</span></div>
+        <div class="comp-item"><span class="ci-label">Taxa anual</span><span class="ci-val ruim">10–12% a.a.</span></div>
+        <div class="comp-item"><span class="ci-label">Prazo</span><span class="ci-val">360 meses (máx.)</span></div>
+        <div class="comp-item"><span class="ci-label">Disponibilidade imediata</span><span class="ci-val">Sim (aprovação em dias)</span></div>
+        <div class="comp-item"><span class="ci-label">Uso do FGTS</span><span class="ci-val">Sim — entrada/amortização</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-wrap" style="height: 320px;">
+    <canvas id="chartComparativo" role="img" aria-label="Comparativo de custo total entre consórcio e financiamento bancário para imóvel de R$ 1 milhão">Consórcio: R$1,52M total. Financiamento: R$2,65M total.</canvas>
+  </div>
+
+  <div style="background: var(--verde-claro); border: 1px solid var(--verde); border-radius: 10px; padding: 1.25rem; margin-top: 1rem;">
+    <div style="font-weight: 600; font-size: 14px; color: var(--verde); margin-bottom: 6px;">Economia real: R$ 1.100.000 a menos</div>
+    <div style="font-size: 13px; color: var(--cinza-medio); line-height: 1.6;">
+      Considerando um financiamento típico com CET de 11% a.a. em 360 meses, o custo total gira em torno de R$ 2,6 milhões — quase o dobro do consórcio. A diferença daria para comprar outro imóvel.
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- AMORTIZAÇÃO -->
+<section id="amortizacao" class="fade-in">
+  <div class="section-tag">Estratégia de saída</div>
+  <h2>Encurtando o prazo com FGTS</h2>
+  <p class="section-desc">Amortizando R$ 100.000 a cada 2 anos após a contemplação, o prazo cai de 213 para aproximadamente 95 meses — menos de 8 anos.</p>
+
+  <div class="metrica-grid">
+    <div class="metrica">
+      <div class="m-label">Prazo original pós-contemplação</div>
+      <div class="m-val">213 meses</div>
+      <div class="m-sub">Sem nenhuma amortização</div>
+    </div>
+    <div class="metrica verde">
+      <div class="m-label">Prazo com amortizações</div>
+      <div class="m-val">~95 meses</div>
+      <div class="m-sub">R$ 100k a cada 2 anos</div>
+    </div>
+    <div class="metrica verde">
+      <div class="m-label">Meses economizados</div>
+      <div class="m-val">~118 meses</div>
+      <div class="m-sub">Quase 10 anos a menos de parcelas</div>
+    </div>
+    <div class="metrica amber">
+      <div class="m-label">Total investido em amortizações</div>
+      <div class="m-val">R$ 400.000</div>
+      <div class="m-sub">4 aportes de R$ 100k (FGTS + recurso)</div>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot verde"></div>
+      <div class="tl-tag">Mês ~12</div>
+      <div class="tl-titulo">Contemplação</div>
+      <div class="tl-desc">Lance de 50% ofertado. Crédito de R$ 1.000.000 liberado em aproximadamente 12 meses. Você compra o imóvel.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot amber"></div>
+      <div class="tl-tag">Mês 24 (ano 2)</div>
+      <div class="tl-titulo">1ª amortização — R$ 100k</div>
+      <div class="tl-desc">Primeiro uso do FGTS ou recurso próprio. Saldo devedor cai cerca de R$ 100k. Prazo reduz significativamente.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot amber"></div>
+      <div class="tl-tag">Mês 48 (ano 4)</div>
+      <div class="tl-titulo">2ª amortização — R$ 100k</div>
+      <div class="tl-desc">Segundo aporte. Saldo já está mais baixo — o impacto no prazo é proporcionalmente maior.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot amber"></div>
+      <div class="tl-tag">Mês 72 (ano 6)</div>
+      <div class="tl-titulo">3ª amortização — R$ 100k</div>
+      <div class="tl-desc">Terceiro aporte. Dependendo do saldo, o prazo restante já está bem curto.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot azul"></div>
+      <div class="tl-tag">Mês ~95</div>
+      <div class="tl-titulo">Quitação antecipada</div>
+      <div class="tl-desc">Com a 4ª amortização ou parcelas regulares, o consórcio é encerrado. Imóvel 100% quitado em menos de 8 anos após contemplação.</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap" style="height: 300px;">
+    <canvas id="chartAmort" role="img" aria-label="Evolução do saldo devedor com e sem amortizações periódicas de R$ 100.000 a cada 2 anos">Saldo sem amortização cai linearmente em 213 meses. Com amortizações, encerra em ~95 meses.</canvas>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- OBJEÇÕES -->
+<section id="objecoes" class="fade-in">
+  <div class="section-tag">Tire suas dúvidas</div>
+  <h2>As perguntas mais comuns</h2>
+  <p class="section-desc">Respostas diretas para as objeções que todo mundo tem antes de entrar num consórcio.</p>
+
+  <div class="obj-lista">
+    <div class="obj-item">
+      <div class="obj-icone duvida">🤔</div>
+      <div>
+        <div class="obj-pergunta">"E se eu não for contemplado rápido?"</div>
+        <div class="obj-resposta">Com um lance de 50% — dos maiores possíveis —, a probabilidade de contemplação em até 12 meses é muito alta. Além disso, enquanto aguarda, você paga apenas R$ 3.833/mês (redutor ativo). Caso não seja contemplado nesse período, pode aumentar o lance próprio com FGTS na tentativa seguinte.</div>
+      </div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icone duvida">🤔</div>
+      <div>
+        <div class="obj-pergunta">"O valor da carta vai valorizar ou desvalorizar?"</div>
+        <div class="obj-resposta">A carta de crédito é corrigida pelo INCC (Índice Nacional de Construção Civil), que historicamente acompanha a valorização dos imóveis. Na prática, o poder de compra da sua carta tende a ser mantido ao longo do tempo — diferente do dinheiro parado no banco.</div>
+      </div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icone duvida">🤔</div>
+      <div>
+        <div class="obj-pergunta">"E se eu precisar sair do consórcio?"</div>
+        <div class="obj-resposta">É possível ceder a cota a terceiros ou solicitar cancelamento. Em caso de cancelamento, o valor pago é devolvido ao final do grupo ou por sorteio. Não é ideal, mas é uma saída. O importante é entrar com consciência de que é um compromisso de médio/longo prazo.</div>
+      </div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icone duvida">🤔</div>
+      <div>
+        <div class="obj-pergunta">"Por que 240 meses e não 120?"</div>
+        <div class="obj-resposta">Prazo mais longo = parcela menor = menos pressão no orçamento mensal. Como a estratégia inclui amortizações periódicas com FGTS, o prazo real será muito menor. Você usa o prazo longo como segurança e o encurta conforme tem disponibilidade — sem comprometer a renda mensal.</div>
+      </div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icone duvida">🤔</div>
+      <div>
+        <div class="obj-pergunta">"Preciso ter os R$ 333.000 agora?"</div>
+        <div class="obj-resposta">Não necessariamente agora — você precisa ter esse valor disponível no momento em que oferecer o lance, que pode ser na 1ª, 2ª ou 3ª assembleia. Isso dá tempo para organizar o capital: venda de outro ativo, reserva acumulada, FGTS, ou combinação de fontes. A Embracon aceita FGTS no lance próprio também.</div>
+      </div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icone duvida">🤔</div>
+      <div>
+        <div class="obj-pergunta">"Taxa administrativa não é a mesma coisa que juros?"</div>
+        <div class="obj-resposta">Não. Juros incidem sobre o saldo devedor de forma composta — quanto mais tempo, mais você paga. A taxa administrativa do consórcio é linear, já embutida nas parcelas desde o início. No financiamento, os primeiros anos pagam quase só juros. No consórcio, cada parcela já amortiza o principal desde o dia 1.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta">
+  <h2>Pronto para dar o próximo passo?</h2>
+  <p>Sua simulação personalizada está pronta. Vamos conversar sobre os detalhes do seu caso?</p>
+  <a class="cta-btn" href="https://wa.me/5511985876570?text=Ol%C3%A1!%20Vi%20a%20simula%C3%A7%C3%A3o%20do%20cons%C3%B3rcio%20de%20im%C3%B3vel%20e%20quero%20saber%20mais.">Falar com a Berk Group no WhatsApp</a>
+  <div class="cta-rodape">Berk Group — Correspondente Embracon · Simulação personalizada para Thiago Viana, para fins informativos. Valores sujeitos a confirmação pelo administrador. As parcelas são reajustadas anualmente pelo INCC (Índice Nacional de Custo da Construção), podendo variar ao longo do plano.</div>
+</div>
+
+<script>
+/* CHART 1 — PARCELAS POR PRAZO */
+new Chart(document.getElementById('chartParcelas'), {
+  type: 'bar',
+  data: {
+    labels: ['120 meses', '150 meses', '180 meses', '240 meses ★'],
+    datasets: [{
+      label: 'Parcela líquida mensal',
+      data: [11944, 9556, 7963, 4172],
+      backgroundColor: ['#B4B2A9', '#85B7EB', '#5DCAA5', '#0F6E56'],
+      borderRadius: 6,
+      borderSkipped: false
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => 'R$ ' + ctx.parsed.y.toLocaleString('pt-BR') } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#888' } },
+      y: {
+        grid: { color: 'rgba(0,0,0,0.06)' },
+        ticks: { color: '#888', callback: v => 'R$ ' + (v/1000).toFixed(0) + 'k' }
+      }
+    }
+  }
+});
+
+/* CHART 2 — COMPARATIVO CUSTO TOTAL */
+new Chart(document.getElementById('chartComparativo'), {
+  type: 'bar',
+  data: {
+    labels: ['Consórcio Embracon', 'Financiamento bancário (11% a.a.)'],
+    datasets: [
+      {
+        label: 'Crédito recebido',
+        data: [1000000, 1000000],
+        backgroundColor: '#5DCAA5',
+        borderRadius: [0,0],
+        borderSkipped: false,
+        stack: 'total'
+      },
+      {
+        label: 'Custo adicional (taxas/juros)',
+        data: [520000, 1650000],
+        backgroundColor: ['#EF9F27', '#E24B4A'],
+        borderRadius: [6, 6],
+        borderSkipped: false,
+        stack: 'total'
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ctx.dataset.label + ': R$ ' + ctx.parsed.y.toLocaleString('pt-BR'),
+          footer: items => 'Total: R$ ' + items.reduce((a,b) => a + b.parsed.y, 0).toLocaleString('pt-BR')
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#888' }, stacked: true },
+      y: {
+        stacked: true,
+        grid: { color: 'rgba(0,0,0,0.06)' },
+        ticks: { color: '#888', callback: v => 'R$ ' + (v/1000000).toFixed(1) + 'M' }
+      }
+    }
+  }
+});
+
+/* CHART 3 — AMORTIZAÇÃO */
+(function() {
+  const PARCELA = 4172;
+  const PRAZO = 213;
+  const TAXA = 0.0008;
+  const AMORT = 100000;
+  const FREQ = 24;
+
+  function saldoInicial() {
+    let s = 0;
+    for (let i = 1; i <= PRAZO; i++) s += PARCELA / Math.pow(1 + TAXA, i);
+    return Math.round(s);
+  }
+  const SI = saldoInicial();
+
+  const labels = [], semAmort = [SI], comAmort = [SI];
+  let s1 = SI, s2 = SI;
+  for (let m = 1; m <= PRAZO; m++) {
+    s1 = Math.max(0, s1 * (1 + TAXA) - PARCELA);
+    s2 = Math.max(0, s2 * (1 + TAXA) - PARCELA);
+    if (m % FREQ === 0 && s2 > 0) s2 = Math.max(0, s2 - AMORT);
+    labels.push(m % 24 === 0 ? 'ano ' + Math.round(m/12) : '');
+    semAmort.push(Math.round(s1));
+    comAmort.push(Math.round(s2));
+    if (s2 <= 0 && s1 <= 0) break;
+  }
+
+  new Chart(document.getElementById('chartAmort'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Sem amortização',
+          data: semAmort,
+          borderColor: '#B4B2A9',
+          borderWidth: 2,
+          pointRadius: 0,
+          borderDash: [6,4],
+          tension: 0.3,
+          fill: false
+        },
+        {
+          label: 'R$ 100k a cada 2 anos',
+          data: comAmort,
+          borderColor: '#0F6E56',
+          borderWidth: 2.5,
+          pointRadius: 0,
+          tension: 0.2,
+          fill: { target: 'origin', above: 'rgba(15,110,86,0.07)' }
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': R$ ' + ctx.parsed.y.toLocaleString('pt-BR') } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#888', autoSkip: false, maxRotation: 0, callback: (v, i) => labels[i] || '' } },
+        y: { min: 0, grid: { color: 'rgba(0,0,0,0.06)' }, ticks: { color: '#888', callback: v => 'R$ ' + Math.round(v/1000) + 'k' } }
+      }
+    }
+  });
+})();
+
+/* FADE IN SCROLL */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
