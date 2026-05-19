@@ -13,6 +13,7 @@
     --cinza:#2C2C2A;--cinza-medio:#5F5E5A;--cinza-claro:#F1EFE8;--cinza-borda:#D3D1C7;
     --amber:#BA7517;--amber-claro:#FAEEDA;
     --azul:#185FA5;--azul-claro:#E6F1FB;
+    --roxo:#6B3FA0;--roxo-claro:#F0EBF8;
     --branco:#FFFFFF;
     --fonte-display:'DM Serif Display',Georgia,serif;
     --fonte-corpo:'DM Sans',system-ui,sans-serif;
@@ -139,6 +140,15 @@
     .hero-stat:last-child{border-bottom:none}
     nav .nav-links{display:none}
   }
+
+  .cartao-card{background:var(--roxo-claro);border:1px solid var(--roxo);border-radius:12px;padding:1.5rem;margin-bottom:2rem;display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:start}
+  .cartao-icon{width:48px;height:48px;background:var(--roxo);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+  .cartao-titulo{font-size:15px;font-weight:600;color:var(--roxo);margin-bottom:6px}
+  .cartao-desc{font-size:13px;color:var(--cinza-medio);line-height:1.6}
+  .cartao-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  .cartao-opcao{background:var(--branco);border:1px solid #c4a8de;border-radius:8px;padding:.75rem;text-align:center}
+  .cartao-opcao .co-num{font-family:var(--fonte-display);font-size:1.3rem;color:var(--roxo);display:block;line-height:1.1}
+  .cartao-opcao .co-label{font-size:11px;color:var(--cinza-medio);margin-top:3px}
 </style>
 </head>
 <body>
@@ -258,11 +268,35 @@
     </div>
   </div>
 
+
+  <!-- CARTÃO -->
+  <div class="cartao-card">
+    <div class="cartao-icon">💳</div>
+    <div>
+      <div class="cartao-titulo">1ª parcela pode ser paga em até 3× no cartão de crédito</div>
+      <div class="cartao-desc">A primeira parcela de R$ 43.462,50 — que inclui a taxa de adesão de 2% — pode ser parcelada em até 3 vezes no cartão de crédito, facilitando a entrada no consórcio sem comprometer o caixa imediato.</div>
+      <div class="cartao-grid">
+        <div class="cartao-opcao">
+          <span class="co-num">R$ 43.463</span>
+          <div class="co-label">À vista no cartão</div>
+        </div>
+        <div class="cartao-opcao">
+          <span class="co-num">2× R$ 21.731</span>
+          <div class="co-label">Parcelado em 2×</div>
+        </div>
+        <div class="cartao-opcao">
+          <span class="co-num">3× R$ 14.488</span>
+          <div class="co-label">Parcelado em 3×</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="metrica-grid">
     <div class="metrica">
-      <div class="m-label">1ª parcela (com adesão de 2%)</div>
+      <div class="m-label">1ª parcela (com adesão de 2%) — até 3× cartão</div>
       <div class="m-val">R$ 43.463</div>
-      <div class="m-sub">Única parcela com adesão embutida</div>
+      <div class="m-sub">ou 3× R$ 14.488 no cartão de crédito</div>
     </div>
     <div class="metrica verde">
       <div class="m-label">Demais parcelas pré-contemplação</div>
@@ -279,25 +313,6 @@
       <div class="m-val">R$ 1.844.978</div>
       <div class="m-sub">Sobrecusto de 29,5% sobre o crédito</div>
     </div>
-  </div>
-
-  <div class="tabela-wrap">
-    <table>
-      <thead>
-        <tr><th>Prazo</th><th>Parcela demais</th><th>Perfil</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>100 meses</td><td><strong>R$ 13.110</strong></td><td><span class="pill" style="background:#F1EFE8;color:#5F5E5A;">Prazo muito curto</span></td></tr>
-        <tr><td>120 meses</td><td><strong>R$ 10.925</strong></td><td><span class="pill" style="background:#E6F1FB;color:#185FA5;">Parcela alta</span></td></tr>
-        <tr><td>150 meses</td><td><strong>R$ 8.740</strong></td><td><span class="pill" style="background:#E1F5EE;color:#0F6E56;">Bom equilíbrio</span></td></tr>
-        <tr><td>200 meses</td><td><strong>R$ 6.555</strong></td><td><span class="pill" style="background:#E1F5EE;color:#0F6E56;">Recomendado</span></td></tr>
-        <tr class="rec"><td><strong>240 meses ★</strong></td><td><strong style="color:var(--verde)">R$ 5.463</strong></td><td><span class="pill" style="background:#0F6E56;color:#fff;">Menor parcela</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="chart-wrap" style="height:300px;">
-    <canvas id="chartParcelas"></canvas>
   </div>
 </section>
 
@@ -329,6 +344,7 @@
         <div class="comp-item"><span class="ci-label">Taxa efetiva anual</span><span class="ci-val bom">~1,0% a.a.</span></div>
         <div class="comp-item"><span class="ci-label">Acesso ao imóvel</span><span class="ci-val">~12 meses</span></div>
         <div class="comp-item"><span class="ci-label">FGTS amortização</span><span class="ci-val bom">Sim</span></div>
+        <div class="comp-item"><span class="ci-label">1ª parcela no cartão</span><span class="ci-val bom">Até 3× R$ 14.488</span></div>
       </div>
     </div>
 
@@ -521,7 +537,7 @@
 </div>
 
 <script>
-new Chart(document.getElementById('chartParcelas'),{type:'bar',data:{labels:['100 meses','120 meses','150 meses','200 meses','240 meses ★'],datasets:[{label:'Parcela mensal (demais)',data:[13110,10925,8740,6555,5463],backgroundColor:['#B4B2A9','#B4B2A9','#85B7EB','#5DCAA5','#0F6E56'],borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'R$ '+ctx.parsed.y.toLocaleString('pt-BR')}}},scales:{x:{grid:{display:false},ticks:{color:'#888'}},y:{grid:{color:'rgba(0,0,0,0.06)'},ticks:{color:'#888',callback:v=>'R$ '+(v/1000).toFixed(0)+'k'}}}}});
+
 
 new Chart(document.getElementById('chartComparativo'),{type:'bar',data:{labels:['Consórcio Embracon','Financiamento SAC (11%a.a.)','Compra à vista'],datasets:[{label:'Crédito recebido',data:[1425000,1425000,1425000],backgroundColor:'#5DCAA5',borderRadius:[0,0,0],borderSkipped:false,stack:'total'},{label:'Custo adicional (taxas/juros)',data:[419978,1496466,0],backgroundColor:['#EF9F27','#E24B4A','rgba(0,0,0,0)'],borderRadius:[6,6,0],borderSkipped:false,stack:'total'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': R$ '+ctx.parsed.y.toLocaleString('pt-BR'),footer:items=>'Total: R$ '+items.reduce((a,b)=>a+b.parsed.y,0).toLocaleString('pt-BR')}}},scales:{x:{grid:{display:false},ticks:{color:'#888'},stacked:true},y:{stacked:true,grid:{color:'rgba(0,0,0,0.06)'},ticks:{color:'#888',callback:v=>'R$ '+(v/1000000).toFixed(1)+'M'}}}}});
 

@@ -312,25 +312,6 @@
       <div class="m-sub">Sobrecusto de 29,5% sobre o crédito</div>
     </div>
   </div>
-
-  <div class="tabela-wrap">
-    <table>
-      <thead>
-        <tr><th>Prazo</th><th>Parcela demais</th><th>Perfil</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>100 meses</td><td><strong>R$ 4.692</strong></td><td><span class="pill" style="background:#F1EFE8;color:#5F5E5A;">Prazo muito curto</span></td></tr>
-        <tr><td>120 meses</td><td><strong>R$ 3.910</strong></td><td><span class="pill" style="background:#E6F1FB;color:#185FA5;">Parcela alta</span></td></tr>
-        <tr><td>150 meses</td><td><strong>R$ 3.128</strong></td><td><span class="pill" style="background:#E1F5EE;color:#0F6E56;">Bom equilíbrio</span></td></tr>
-        <tr><td>200 meses</td><td><strong>R$ 2.346</strong></td><td><span class="pill" style="background:#E1F5EE;color:#0F6E56;">Recomendado</span></td></tr>
-        <tr class="rec"><td><strong>240 meses ★</strong></td><td><strong style="color:var(--verde)">R$ 1.955</strong></td><td><span class="pill" style="background:#0F6E56;color:#fff;">Menor parcela</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="chart-wrap" style="height:280px;">
-    <canvas id="chartParcelas"></canvas>
-  </div>
 </section>
 
 <hr class="divider">
@@ -459,13 +440,13 @@
     <div class="tl-item">
       <div class="tl-dot amber"></div>
       <div class="tl-tag">Mês 24 (ano 2)</div>
-      <div class="tl-titulo">1ª amortização simulada — R$ 100k</div>
+      <div class="tl-titulo">1ª amortização simulada — R$ 30k</div>
       <div class="tl-desc">Com FGTS acumulado + reserva, você amortiza R$ 30k. Saldo cai de ~R$ 468k para ~R$ 438k. Cada aporte elimina parcelas do final do plano.</div>
     </div>
     <div class="tl-item">
       <div class="tl-dot amber"></div>
       <div class="tl-tag">Mês 48 (ano 4)</div>
-      <div class="tl-titulo">2ª amortização simulada — R$ 100k</div>
+      <div class="tl-titulo">2ª amortização simulada — R$ 30k</div>
       <div class="tl-desc">Saldo em torno de R$ 365k. Os aportes regulares de R$ 30k continuam reduzindo o prazo consistentemente.</div>
     </div>
     <div class="tl-item">
@@ -520,8 +501,8 @@
     <div class="obj-item">
       <div class="obj-icone">🤔</div>
       <div>
-        <div class="obj-pergunta">"Sou obrigado a amortizar R$ 100k a cada 2 anos?"</div>
-        <div class="obj-resposta">Não — essa é uma simulação baseada no perfil financeiro do cliente, não uma obrigação. Você amortiza quando quiser e quanto puder: FGTS disponível, bônus, venda de ativo, reserva. Cada amortização, mesmo menor como R$ 30k, elimina parcelas do final do prazo sem alterar o valor mensal. É uma estratégia de saída antecipada, não uma exigência.</div>
+        <div class="obj-pergunta">"Sou obrigado a amortizar R$ 30k a cada 2 anos?"</div>
+        <div class="obj-resposta">Não — essa é uma simulação baseada no perfil financeiro do cliente, não uma obrigação. Você amortiza quando quiser e quanto puder: FGTS disponível, bônus, venda de ativo, reserva. Cada amortização de R$ 30k elimina parcelas do final do prazo sem alterar o valor mensal. É uma estratégia de saída antecipada, não uma exigência.</div>
       </div>
     </div>
     <div class="obj-item">
@@ -549,7 +530,7 @@
 </div>
 
 <script>
-new Chart(document.getElementById('chartParcelas'),{type:'bar',data:{labels:['100 meses','120 meses','150 meses','200 meses','240 meses ★'],datasets:[{label:'Parcela mensal (demais)',data:[4692,3910,3128,2346,1955],backgroundColor:['#B4B2A9','#B4B2A9','#85B7EB','#5DCAA5','#0F6E56'],borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'R$ '+ctx.parsed.y.toLocaleString('pt-BR')}}},scales:{x:{grid:{display:false},ticks:{color:'#888'}},y:{grid:{color:'rgba(0,0,0,0.06)'},ticks:{color:'#888',callback:v=>'R$ '+(v/1000).toFixed(1)+'k'}}}}});
+
 
 new Chart(document.getElementById('chartComparativo'),{type:'bar',data:{labels:['Consórcio Embracon','Financiamento SAC (11%a.a.)','Compra à vista'],datasets:[{label:'Crédito recebido',data:[510000,510000,510000],backgroundColor:'#5DCAA5',borderRadius:[0,0,0],borderSkipped:false,stack:'total'},{label:'Custo adicional (taxas/juros)',data:[150308,535577,0],backgroundColor:['#EF9F27','#E24B4A','rgba(0,0,0,0)'],borderRadius:[6,6,0],borderSkipped:false,stack:'total'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': R$ '+ctx.parsed.y.toLocaleString('pt-BR'),footer:items=>'Total: R$ '+items.reduce((a,b)=>a+b.parsed.y,0).toLocaleString('pt-BR')}}},scales:{x:{grid:{display:false},ticks:{color:'#888'},stacked:true},y:{stacked:true,grid:{color:'rgba(0,0,0,0.06)'},ticks:{color:'#888',callback:v=>'R$ '+(v/1000).toFixed(0)+'k'}}}}});
 
