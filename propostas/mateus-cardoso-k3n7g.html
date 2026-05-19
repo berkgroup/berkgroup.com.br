@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consórcio de Imóvel — R$ 510.000 · Mateus Cardoso</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --verde:#0F6E56;--verde-claro:#E1F5EE;--verde-medio:#1D9E75;
+    --vermelho:#C0392B;--vermelho-claro:#FDECEA;
+    --cinza:#2C2C2A;--cinza-medio:#5F5E5A;--cinza-claro:#F1EFE8;--cinza-borda:#D3D1C7;
+    --amber:#BA7517;--amber-claro:#FAEEDA;
+    --azul:#185FA5;--azul-claro:#E6F1FB;
+    --roxo:#6B3FA0;--roxo-claro:#F0EBF8;
+    --branco:#FFFFFF;
+    --fonte-display:'DM Serif Display',Georgia,serif;
+    --fonte-corpo:'DM Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--fonte-corpo);background:#F7F5F0;color:var(--cinza);line-height:1.6}
+
+  nav{position:sticky;top:0;z-index:100;background:var(--branco);border-bottom:1px solid var(--cinza-borda);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px}
+  .nav-logo{font-family:var(--fonte-display);font-size:18px;color:var(--verde);letter-spacing:-.3px}
+  .nav-links{display:flex;gap:1.5rem;list-style:none}
+  .nav-links a{font-size:13px;color:var(--cinza-medio);text-decoration:none;font-weight:500;transition:color .2s}
+  .nav-links a:hover{color:var(--verde)}
+
+  .hero{background:var(--cinza);color:var(--branco);padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(255,255,255,.02) 80px,rgba(255,255,255,.02) 81px);pointer-events:none}
+  .hero-badge{display:inline-block;background:var(--verde);color:var(--branco);font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.5rem}
+  .hero h1{font-family:var(--fonte-display);font-size:clamp(2.2rem,6vw,4rem);font-weight:400;line-height:1.15;margin-bottom:1rem;letter-spacing:-1px}
+  .hero h1 em{color:var(--verde-medio);font-style:italic}
+  .hero p{font-size:1.1rem;color:rgba(255,255,255,.65);max-width:540px;margin:0 auto 2.5rem;font-weight:300}
+  .hero-stats{display:flex;justify-content:center;flex-wrap:wrap;max-width:820px;margin:0 auto;border:1px solid rgba(255,255,255,.12);border-radius:12px;overflow:hidden}
+  .hero-stat{flex:1;min-width:130px;padding:1.5rem 1rem;border-right:1px solid rgba(255,255,255,.12)}
+  .hero-stat:last-child{border-right:none}
+  .hero-stat .valor{font-family:var(--fonte-display);font-size:1.65rem;color:var(--branco);display:block;line-height:1.1;margin-bottom:4px}
+  .hero-stat .label{font-size:12px;color:rgba(255,255,255,.5);font-weight:400}
+
+  section{padding:4rem 2rem;max-width:900px;margin:0 auto}
+  .section-tag{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--verde);margin-bottom:.5rem}
+  h2{font-family:var(--fonte-display);font-size:clamp(1.6rem,4vw,2.2rem);font-weight:400;line-height:1.2;margin-bottom:.75rem;letter-spacing:-.5px}
+  .section-desc{font-size:1rem;color:var(--cinza-medio);max-width:580px;margin-bottom:2.5rem;font-weight:300}
+  hr.divider{border:none;border-top:1px solid var(--cinza-borda);margin:0}
+
+  .fluxo{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:0;border:1px solid var(--cinza-borda);border-radius:12px;overflow:hidden;background:var(--branco);margin-bottom:2rem}
+  .fluxo-passo{padding:1.5rem 1.25rem;border-right:1px solid var(--cinza-borda)}
+  .fluxo-passo:last-child{border-right:none}
+  .fluxo-num{width:28px;height:28px;border-radius:50%;background:var(--verde);color:var(--branco);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem}
+  .fluxo-titulo{font-size:14px;font-weight:600;color:var(--cinza);margin-bottom:4px}
+  .fluxo-desc{font-size:13px;color:var(--cinza-medio);line-height:1.5}
+  .fluxo-dest{font-size:12px;font-weight:600;color:var(--verde);margin-top:6px}
+
+  .lance-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--cinza-borda);border:1px solid var(--cinza-borda);border-radius:12px;overflow:hidden;margin-bottom:2rem}
+  .lance-bloco{background:var(--branco);padding:1.5rem}
+  .lance-bloco.destaque{background:var(--verde-claro)}
+  .lance-bloco .lbl{font-size:12px;color:var(--cinza-medio);font-weight:500;margin-bottom:6px}
+  .lance-bloco .val{font-family:var(--fonte-display);font-size:1.6rem;color:var(--cinza);line-height:1.1}
+  .lance-bloco.destaque .val{color:var(--verde)}
+  .lance-bloco .sub{font-size:12px;color:var(--cinza-medio);margin-top:4px}
+
+  .metrica-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:2rem}
+  .metrica{background:var(--branco);border:1px solid var(--cinza-borda);border-radius:10px;padding:1.25rem}
+  .metrica .m-label{font-size:12px;color:var(--cinza-medio);margin-bottom:6px;font-weight:500}
+  .metrica .m-val{font-family:var(--fonte-display);font-size:1.5rem;color:var(--cinza);line-height:1.1}
+  .metrica .m-sub{font-size:11px;color:var(--cinza-medio);margin-top:4px}
+  .metrica.verde{border-color:var(--verde);background:var(--verde-claro)}
+  .metrica.verde .m-val{color:var(--verde)}
+  .metrica.amber{border-color:var(--amber);background:var(--amber-claro)}
+  .metrica.amber .m-val{color:var(--amber)}
+  .metrica.roxo{border-color:var(--roxo);background:var(--roxo-claro)}
+  .metrica.roxo .m-val{color:var(--roxo)}
+
+  /* CARTÃO CARD */
+  .cartao-card{background:var(--roxo-claro);border:1px solid var(--roxo);border-radius:12px;padding:1.5rem;margin-bottom:2rem;display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:start}
+  .cartao-icon{width:48px;height:48px;background:var(--roxo);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+  .cartao-titulo{font-size:15px;font-weight:600;color:var(--roxo);margin-bottom:6px}
+  .cartao-desc{font-size:13px;color:var(--cinza-medio);line-height:1.6}
+  .cartao-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  .cartao-opcao{background:var(--branco);border:1px solid #c4a8de;border-radius:8px;padding:.75rem;text-align:center}
+  .cartao-opcao .co-num{font-family:var(--fonte-display);font-size:1.3rem;color:var(--roxo);display:block;line-height:1.1}
+  .cartao-opcao .co-label{font-size:11px;color:var(--cinza-medio);margin-top:3px}
+
+  .comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:2rem}
+  @media(max-width:700px){.comp-grid{grid-template-columns:1fr}}
+  .comp-card{border:1px solid var(--cinza-borda);border-radius:12px;overflow:hidden;background:var(--branco)}
+  .comp-card.destaque{border-color:var(--verde);border-width:2px}
+  .comp-header{padding:1rem 1.25rem .75rem;border-bottom:1px solid var(--cinza-borda);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+  .comp-nome{font-weight:600;font-size:14px}
+  .comp-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.3px}
+  .badge-verde{background:var(--verde-claro);color:var(--verde)}
+  .badge-vermelho{background:var(--vermelho-claro);color:var(--vermelho)}
+  .badge-azul{background:var(--azul-claro);color:var(--azul)}
+  .comp-body{padding:1.25rem}
+  .comp-item{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--cinza-claro);font-size:13px;gap:8px}
+  .comp-item:last-child{border-bottom:none}
+  .comp-item .ci-label{color:var(--cinza-medio);flex-shrink:0}
+  .comp-item .ci-val{font-weight:600;color:var(--cinza);text-align:right}
+  .comp-item .ci-val.bom{color:var(--verde)}
+  .comp-item .ci-val.ruim{color:var(--vermelho)}
+  .comp-item .ci-val.neutro{color:var(--azul)}
+
+  .tabela-wrap{overflow-x:auto;margin-bottom:2rem}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:var(--branco);border-radius:12px;overflow:hidden;border:1px solid var(--cinza-borda)}
+  thead tr{background:var(--cinza-claro)}
+  th{padding:10px 14px;text-align:left;font-weight:600;font-size:12px;color:var(--cinza-medio);letter-spacing:.3px}
+  td{padding:11px 14px;border-bottom:1px solid var(--cinza-claro)}
+  tr:last-child td{border-bottom:none}
+  tr.rec td{background:var(--verde-claro)}
+  tr.rec td:first-child{border-left:3px solid var(--verde)}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px}
+
+  .timeline{position:relative;padding-left:2rem;margin-bottom:2rem}
+  .timeline::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--cinza-borda)}
+  .tl-item{position:relative;margin-bottom:1.5rem}
+  .tl-dot{position:absolute;left:-1.75rem;top:4px;width:14px;height:14px;border-radius:50%;border:2px solid var(--branco)}
+  .tl-dot.verde{background:var(--verde)}
+  .tl-dot.amber{background:var(--amber)}
+  .tl-dot.azul{background:var(--azul)}
+  .tl-titulo{font-size:14px;font-weight:600;color:var(--cinza);margin-bottom:2px}
+  .tl-desc{font-size:13px;color:var(--cinza-medio)}
+  .tl-tag{display:inline-block;font-size:11px;font-weight:600;background:var(--cinza-claro);color:var(--cinza-medio);padding:2px 8px;border-radius:4px;margin-bottom:4px}
+
+  .obj-lista{display:flex;flex-direction:column;gap:12px;margin-bottom:2rem}
+  .obj-item{background:var(--branco);border:1px solid var(--cinza-borda);border-radius:10px;padding:1.25rem;display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start}
+  .obj-icone{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--amber-claro)}
+  .obj-pergunta{font-size:13px;font-weight:600;color:var(--cinza);margin-bottom:4px}
+  .obj-resposta{font-size:13px;color:var(--cinza-medio);line-height:1.6}
+
+  .chart-wrap{position:relative;width:100%;margin-bottom:2rem}
+
+  .cta{background:var(--cinza);color:var(--branco);padding:4rem 2rem;text-align:center}
+  .cta h2{font-family:var(--fonte-display);font-size:clamp(1.8rem,4vw,2.4rem);color:var(--branco);margin-bottom:1rem}
+  .cta p{color:rgba(255,255,255,.6);font-weight:300;margin-bottom:2rem;font-size:1rem}
+  .cta-btn{display:inline-block;background:var(--verde);color:var(--branco);font-size:15px;font-weight:600;padding:14px 32px;border-radius:8px;text-decoration:none;transition:background .2s,transform .1s;letter-spacing:.2px}
+  .cta-btn:hover{background:var(--verde-medio);transform:translateY(-1px)}
+  .cta-rodape{font-size:11px;color:rgba(255,255,255,.3);margin-top:2rem;max-width:720px;margin-left:auto;margin-right:auto;line-height:1.7}
+
+  .fade-in{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+  .fade-in.visible{opacity:1;transform:none}
+
+  @media(max-width:600px){
+    .lance-grid{grid-template-columns:1fr}
+    .hero-stats{flex-direction:column}
+    .hero-stat{border-right:none;border-bottom:1px solid rgba(255,255,255,.12)}
+    .hero-stat:last-child{border-bottom:none}
+    nav .nav-links{display:none}
+    .cartao-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Berk Group</div>
+  <ul class="nav-links">
+    <li><a href="#mecanica">Como funciona</a></li>
+    <li><a href="#numeros">Os números</a></li>
+    <li><a href="#comparativo">Comparativo</a></li>
+    <li><a href="#amortizacao">Estratégia FGTS</a></li>
+    <li><a href="#objecoes">Dúvidas</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">Simulação personalizada · Mateus Cardoso</div>
+  <h1>Seu imóvel de<br><em>R$ 510.000</em><br>sem pagar juros</h1>
+  <p>Consórcio Embracon SEP 240 meses com lance de 50%. Parcela de R$ 1.955/mês — e o crédito pode ser seu em ~12 meses.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="valor">R$ 510k</span><span class="label">Crédito líquido</span></div>
+    <div class="hero-stat"><span class="valor">R$ 1.955</span><span class="label">Parcela recorrente</span></div>
+    <div class="hero-stat"><span class="valor">~12 meses</span><span class="label">Estimativa contemplação</span></div>
+    <div class="hero-stat"><span class="valor">50%</span><span class="label">Representatividade lance</span></div>
+    <div class="hero-stat"><span class="valor">0%</span><span class="label">Juros</span></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- MECÂNICA -->
+<section id="mecanica" class="fade-in">
+  <div class="section-tag">Como funciona</div>
+  <h2>A lógica por trás do plano</h2>
+  <p class="section-desc">O consórcio não é um financiamento. É uma poupança coletiva gerenciada — sem juros, sem entrada obrigatória, com contemplação acelerada pelo lance.</p>
+
+  <div class="fluxo">
+    <div class="fluxo-passo">
+      <div class="fluxo-num">1</div>
+      <div class="fluxo-titulo">Entrada no grupo</div>
+      <div class="fluxo-desc">Você contrata a cota de R$ 680.000 bruto. A 1ª parcela inclui a taxa de adesão de 2% — e pode ser paga em até 3× no cartão.</div>
+      <div class="fluxo-dest">R$ 15.555 — 1ª parcela</div>
+    </div>
+    <div class="fluxo-passo">
+      <div class="fluxo-num">2</div>
+      <div class="fluxo-titulo">Parcelas mensais</div>
+      <div class="fluxo-desc">Do 2º mês em diante, parcela de R$ 1.955 com o redutor "mais por menos 50%" ativo.</div>
+      <div class="fluxo-dest">11 meses de R$ 1.955</div>
+    </div>
+    <div class="fluxo-passo">
+      <div class="fluxo-num">3</div>
+      <div class="fluxo-titulo">Lance de 50%</div>
+      <div class="fluxo-desc">R$ 170k próprio + R$ 170k embutido. Este é o nível que garante alta chance de contemplação nas primeiras assembleias.</div>
+      <div class="fluxo-dest">50% = alta chance</div>
+    </div>
+    <div class="fluxo-passo">
+      <div class="fluxo-num">4</div>
+      <div class="fluxo-titulo">Crédito liberado</div>
+      <div class="fluxo-desc">R$ 510.000 disponíveis para a compra. Parcela passa para R$ 2.128 por ~213 meses.</div>
+      <div class="fluxo-dest">Imóvel em mãos</div>
+    </div>
+    <div class="fluxo-passo">
+      <div class="fluxo-num">5</div>
+      <div class="fluxo-titulo">Amortizações FGTS</div>
+      <div class="fluxo-desc">Aportes periódicos encurtam o prazo. Simulação com R$ 30k/2 anos reduz de 213 para ~168 meses.</div>
+      <div class="fluxo-dest">Prazo encurtado</div>
+    </div>
+  </div>
+
+  <!-- DESTAQUE CARTÃO -->
+  <div class="cartao-card">
+    <div class="cartao-icon">💳</div>
+    <div>
+      <div class="cartao-titulo">1ª parcela pode ser paga em até 3× no cartão de crédito</div>
+      <div class="cartao-desc">A primeira parcela de R$ 15.555,00 — que inclui a taxa de adesão de 2% — pode ser parcelada em até 3 vezes no cartão de crédito, facilitando a entrada no consórcio sem comprometer o caixa imediato.</div>
+      <div class="cartao-grid">
+        <div class="cartao-opcao">
+          <span class="co-num">R$ 15.555</span>
+          <div class="co-label">À vista no cartão</div>
+        </div>
+        <div class="cartao-opcao">
+          <span class="co-num">2× R$ 7.778</span>
+          <div class="co-label">Parcelado em 2×</div>
+        </div>
+        <div class="cartao-opcao">
+          <span class="co-num">3× R$ 5.185</span>
+          <div class="co-label">Parcelado em 3×</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--verde-claro);border:1px solid var(--verde);border-radius:10px;padding:1.25rem;display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.5rem;">
+    <span style="font-size:22px;flex-shrink:0;">🎯</span>
+    <div>
+      <div style="font-weight:600;font-size:14px;color:var(--verde);margin-bottom:4px;">Por que o lance precisa ser de 50% para ter alta chance de contemplação</div>
+      <div style="font-size:13px;color:var(--cinza-medio);line-height:1.6;">Nas assembleias, o maior lance vence. Com 50% de representatividade — 25% de recurso próprio (R$ 170k) mais 25% de lance embutido (R$ 170k) — você fica entre os lances mais altos do grupo. Lances abaixo de 30–35% têm chances muito menores, podendo demorar anos. <strong style="color:var(--cinza)">Este nível de 50% é exatamente o que posiciona Mateus nas primeiras assembleias.</strong></div>
+    </div>
+  </div>
+
+  <div style="background:var(--amber-claro);border:1px solid var(--amber);border-radius:10px;padding:1.25rem;display:flex;gap:1rem;align-items:flex-start;">
+    <span style="font-size:22px;flex-shrink:0;">💡</span>
+    <div>
+      <div style="font-weight:600;font-size:14px;color:var(--amber);margin-bottom:4px;">O segredo está no lance embutido</div>
+      <div style="font-size:13px;color:var(--cinza-medio);line-height:1.6;">O lance embutido usa parte do próprio crédito para compor o lance total. Você não precisa ter os R$ 340k no bolso — apenas os R$ 170k de recurso próprio (25%). O restante vem da redução das parcelas futuras. Uma alavancagem inteligente que dobra o poder do seu lance sem precisar de capital adicional.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- NÚMEROS -->
+<section id="numeros" class="fade-in">
+  <div class="section-tag">Os números</div>
+  <h2>Seu plano em detalhes</h2>
+  <p class="section-desc">Plano Embracon SEP · 240 meses · redutor "mais por menos 50%" · taxa administrativa 18% a.a.</p>
+
+  <div class="lance-grid">
+    <div class="lance-bloco">
+      <div class="lbl">Carta de crédito bruta</div>
+      <div class="val">R$ 680.000</div>
+      <div class="sub">Valor contratado junto à Embracon</div>
+    </div>
+    <div class="lance-bloco destaque">
+      <div class="lbl">Crédito líquido recebido</div>
+      <div class="val">R$ 510.000</div>
+      <div class="sub">Após desconto do lance embutido</div>
+    </div>
+    <div class="lance-bloco">
+      <div class="lbl">Lance de recurso próprio (25%)</div>
+      <div class="val">R$ 170.000</div>
+      <div class="sub">Capital que você mobiliza para o lance</div>
+    </div>
+    <div class="lance-bloco">
+      <div class="lbl">Lance embutido (25%)</div>
+      <div class="val">R$ 170.000</div>
+      <div class="sub">Descontado das suas parcelas futuras</div>
+    </div>
+  </div>
+
+  <div class="metrica-grid">
+    <div class="metrica roxo">
+      <div class="m-label">1ª parcela (com adesão) — até 3× cartão</div>
+      <div class="m-val">R$ 15.555</div>
+      <div class="m-sub">ou 3× R$ 5.185 no cartão de crédito</div>
+    </div>
+    <div class="metrica verde">
+      <div class="m-label">Demais parcelas pré-contemplação</div>
+      <div class="m-val">R$ 1.955</div>
+      <div class="m-sub">Redutor "mais por menos 50%" ativo</div>
+    </div>
+    <div class="metrica">
+      <div class="m-label">Parcela pós-contemplação</div>
+      <div class="m-val">R$ 2.128</div>
+      <div class="m-sub">~213 meses restantes</div>
+    </div>
+    <div class="metrica amber">
+      <div class="m-label">Total pago ao longo do plano</div>
+      <div class="m-val">R$ 660.308</div>
+      <div class="m-sub">Sobrecusto de 29,5% sobre o crédito</div>
+    </div>
+  </div>
+
+  <div class="tabela-wrap">
+    <table>
+      <thead>
+        <tr><th>Prazo</th><th>Parcela demais</th><th>Perfil</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>100 meses</td><td><strong>R$ 4.692</strong></td><td><span class="pill" style="background:#F1EFE8;color:#5F5E5A;">Prazo muito curto</span></td></tr>
+        <tr><td>120 meses</td><td><strong>R$ 3.910</strong></td><td><span class="pill" style="background:#E6F1FB;color:#185FA5;">Parcela alta</span></td></tr>
+        <tr><td>150 meses</td><td><strong>R$ 3.128</strong></td><td><span class="pill" style="background:#E1F5EE;color:#0F6E56;">Bom equilíbrio</span></td></tr>
+        <tr><td>200 meses</td><td><strong>R$ 2.346</strong></td><td><span class="pill" style="background:#E1F5EE;color:#0F6E56;">Recomendado</span></td></tr>
+        <tr class="rec"><td><strong>240 meses ★</strong></td><td><strong style="color:var(--verde)">R$ 1.955</strong></td><td><span class="pill" style="background:#0F6E56;color:#fff;">Menor parcela</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chart-wrap" style="height:280px;">
+    <canvas id="chartParcelas"></canvas>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- COMPARATIVO -->
+<section id="comparativo" class="fade-in">
+  <div class="section-tag">Comparativo</div>
+  <h2>Consórcio vs. financiamento SAC vs. à vista</h2>
+  <p class="section-desc">Comparação justa: em todos os cenários, R$ 170.000 de capital próprio são mobilizados. A diferença está em quando e como esse dinheiro trabalha.</p>
+
+  <div style="background:var(--azul-claro);border:1px solid #aac4e0;border-radius:10px;padding:1rem 1.25rem;margin-bottom:2rem;font-size:13px;color:var(--cinza-medio);line-height:1.6;">
+    <strong style="color:var(--azul);">Base de comparação justa:</strong> No financiamento SAC, a entrada de R$ 170.000 é desembolsada no ato da contratação e R$ 340.000 são financiados. No consórcio, os mesmos R$ 170.000 são usados como lance próprio apenas no mês ~12, permanecendo disponíveis e rentáveis nos meses anteriores.
+  </div>
+
+  <div class="comp-grid">
+    <div class="comp-card destaque">
+      <div class="comp-header">
+        <span class="comp-nome" style="color:var(--verde)">Consórcio Embracon</span>
+        <span class="comp-badge badge-verde">Recomendado</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-item"><span class="ci-label">Crédito recebido</span><span class="ci-val bom">R$ 510.000</span></div>
+        <div class="comp-item"><span class="ci-label">Capital próprio mobilizado</span><span class="ci-val">R$ 170.000 (mês ~12)</span></div>
+        <div class="comp-item"><span class="ci-label">Parcela pré-contemplação</span><span class="ci-val bom">R$ 1.955/mês</span></div>
+        <div class="comp-item"><span class="ci-label">Parcela pós-contemplação</span><span class="ci-val bom">R$ 2.128/mês</span></div>
+        <div class="comp-item"><span class="ci-label">Total pago</span><span class="ci-val bom">R$ 660.308</span></div>
+        <div class="comp-item"><span class="ci-label">Sobrecusto</span><span class="ci-val bom">R$ 150.308 (29,5%)</span></div>
+        <div class="comp-item"><span class="ci-label">Juros</span><span class="ci-val bom">Nenhum</span></div>
+        <div class="comp-item"><span class="ci-label">Taxa efetiva anual</span><span class="ci-val bom">~1,0% a.a.</span></div>
+        <div class="comp-item"><span class="ci-label">Acesso ao imóvel</span><span class="ci-val">~12 meses</span></div>
+        <div class="comp-item"><span class="ci-label">1ª parcela no cartão</span><span class="ci-val bom">Até 3× R$ 5.185</span></div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-header">
+        <span class="comp-nome">Financiamento SAC Itaú</span>
+        <span class="comp-badge badge-vermelho">Muito mais caro</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-item"><span class="ci-label">Crédito recebido</span><span class="ci-val">R$ 510.000</span></div>
+        <div class="comp-item"><span class="ci-label">Entrada desembolsada</span><span class="ci-val ruim">R$ 170.000 (dia 1)</span></div>
+        <div class="comp-item"><span class="ci-label">Financiado</span><span class="ci-val">R$ 340.000</span></div>
+        <div class="comp-item"><span class="ci-label">1ª parcela SAC</span><span class="ci-val ruim">R$ 3.912/mês</span></div>
+        <div class="comp-item"><span class="ci-label">Última parcela SAC</span><span class="ci-val">R$ 953/mês</span></div>
+        <div class="comp-item"><span class="ci-label">Total pago</span><span class="ci-val ruim">R$ 1.045.577</span></div>
+        <div class="comp-item"><span class="ci-label">Juros pagos</span><span class="ci-val ruim">R$ 535.577</span></div>
+        <div class="comp-item"><span class="ci-label">Sobrecusto</span><span class="ci-val ruim">105,0% sobre crédito</span></div>
+        <div class="comp-item"><span class="ci-label">Taxa de juros</span><span class="ci-val ruim">~11% a.a. (SFI)</span></div>
+        <div class="comp-item"><span class="ci-label">Acesso ao imóvel</span><span class="ci-val">Imediato (~30 dias)</span></div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-header">
+        <span class="comp-nome" style="color:var(--azul)">Compra à vista</span>
+        <span class="comp-badge badge-azul">Capital imobilizado</span>
+      </div>
+      <div class="comp-body">
+        <div class="comp-item"><span class="ci-label">Crédito recebido</span><span class="ci-val neutro">R$ 510.000</span></div>
+        <div class="comp-item"><span class="ci-label">Pagamento único</span><span class="ci-val neutro">R$ 510.000</span></div>
+        <div class="comp-item"><span class="ci-label">Parcela mensal</span><span class="ci-val neutro">Nenhuma</span></div>
+        <div class="comp-item"><span class="ci-label">Total pago</span><span class="ci-val neutro">R$ 510.000</span></div>
+        <div class="comp-item"><span class="ci-label">Custo financeiro</span><span class="ci-val neutro">Zero nominal</span></div>
+        <div class="comp-item"><span class="ci-label">Poder de negociação</span><span class="ci-val bom">Máximo — até 10–15%</span></div>
+        <div class="comp-item"><span class="ci-label">Liquidez após compra</span><span class="ci-val ruim">Praticamente zero</span></div>
+        <div class="comp-item"><span class="ci-label">Custo de oportunidade</span><span class="ci-val ruim">Alto — capital parado</span></div>
+        <div class="comp-item"><span class="ci-label">Acesso ao imóvel</span><span class="ci-val bom">Imediato</span></div>
+        <div class="comp-item"><span class="ci-label">FGTS</span><span class="ci-val">Uso como parte do valor</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-wrap" style="height:320px;">
+    <canvas id="chartComparativo"></canvas>
+  </div>
+
+  <div style="background:var(--verde-claro);border:1px solid var(--verde);border-radius:10px;padding:1.25rem;margin-top:1rem;">
+    <div style="font-weight:600;font-size:14px;color:var(--verde);margin-bottom:6px;">Economia real vs. financiamento SAC: R$ 385.269 a menos</div>
+    <div style="font-size:13px;color:var(--cinza-medio);line-height:1.6;">Mesma entrada de R$ 170.000, mesmo imóvel de R$ 510.000. Os juros compostos de ~11% a.a. no SAC somam R$ 535.577 — mais que o imóvel vale hoje. No consórcio, o sobrecusto fica em 29,5%. A diferença é de R$ 385.269 no seu bolso.</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- AMORTIZAÇÃO -->
+<section id="amortizacao" class="fade-in">
+  <div class="section-tag">Estratégia de saída</div>
+  <h2>Encurtando o prazo com FGTS</h2>
+  <p class="section-desc">Após a contemplação, o prazo original é de ~213 meses. Amortizando R$ 30.000 a cada 2 anos, o prazo cai para ~168 meses — economizando 45 parcelas, sem alterar o valor mensal.</p>
+
+  <div style="background:var(--amber-claro);border:1px solid var(--amber);border-radius:10px;padding:1rem 1.25rem;margin-bottom:2rem;font-size:13px;color:var(--cinza-medio);line-height:1.6;">
+    <strong style="color:var(--amber);">Nota sobre a simulação abaixo:</strong> A projeção de R$ 30.000 a cada 2 anos é uma simulação baseada no perfil do cliente — não uma obrigação contratual. Você amortiza quando quiser e o quanto quiser: FGTS disponível, bônus, reserva acumulada. Cada aporte elimina parcelas do final do plano, sem alterar o valor mensal.
+  </div>
+
+  <div class="metrica-grid">
+    <div class="metrica">
+      <div class="m-label">Prazo original pós-contemplação</div>
+      <div class="m-val">~213 meses</div>
+      <div class="m-sub">Sem nenhuma amortização</div>
+    </div>
+    <div class="metrica verde">
+      <div class="m-label">Prazo simulado com aportes</div>
+      <div class="m-val">~168 meses</div>
+      <div class="m-sub">Simulação: R$ 30k a cada 2 anos</div>
+    </div>
+    <div class="metrica verde">
+      <div class="m-label">Parcelas economizadas</div>
+      <div class="m-val">~45 meses</div>
+      <div class="m-sub">3 anos e 9 meses a menos</div>
+    </div>
+    <div class="metrica amber">
+      <div class="m-label">Total amortizado na simulação</div>
+      <div class="m-val">~R$ 210.000</div>
+      <div class="m-sub">7 aportes de R$ 30k — FGTS + recurso</div>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot verde"></div>
+      <div class="tl-tag">Mês ~12</div>
+      <div class="tl-titulo">Contemplação</div>
+      <div class="tl-desc">Lance de 50% vence a assembleia. R$ 510.000 liberados. Você compra o imóvel. Parcela: R$ 2.128/mês por ~213 meses.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot amber"></div>
+      <div class="tl-tag">Mês 24 (ano 2)</div>
+      <div class="tl-titulo">1ª amortização simulada — R$ 100k</div>
+      <div class="tl-desc">Com FGTS acumulado + reserva, você amortiza R$ 30k. Saldo cai de ~R$ 468k para ~R$ 438k. Cada aporte elimina parcelas do final do plano.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot amber"></div>
+      <div class="tl-tag">Mês 48 (ano 4)</div>
+      <div class="tl-titulo">2ª amortização simulada — R$ 100k</div>
+      <div class="tl-desc">Saldo em torno de R$ 365k. Os aportes regulares de R$ 30k continuam reduzindo o prazo consistentemente.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot amber"></div>
+      <div class="tl-tag">Mês 72 ao 144</div>
+      <div class="tl-titulo">3ª a 6ª amortizações simuladas — R$ 30k cada</div>
+      <div class="tl-desc">Saldo caindo de R$ 291k até R$ 59k. Os aportes bienais mantêm o ritmo de redução do prazo.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot azul"></div>
+      <div class="tl-tag">Mês ~96</div>
+      <div class="tl-titulo">Quitação antecipada (na simulação)</div>
+      <div class="tl-desc">Imóvel 100% quitado em ~14 anos após contemplação — contra os ~18 anos do prazo original.</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap" style="height:300px;">
+    <canvas id="chartAmort"></canvas>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- OBJEÇÕES -->
+<section id="objecoes" class="fade-in">
+  <div class="section-tag">Tire suas dúvidas</div>
+  <h2>As perguntas mais comuns</h2>
+  <p class="section-desc">Respostas diretas para as objeções mais frequentes antes de entrar num consórcio de imóvel.</p>
+
+  <div class="obj-lista">
+    <div class="obj-item">
+      <div class="obj-icone">🤔</div>
+      <div>
+        <div class="obj-pergunta">"Por que o lance precisa ser de 50%? Não dá com menos?"</div>
+        <div class="obj-resposta">Dá — mas a chance de contemplação cai bastante. Com 50%, você fica entre os maiores lances do grupo e tem alta probabilidade de sair nas primeiras assembleias. Com 30%, pode esperar anos. O lance de 50% — 25% próprio (R$ 170k) + 25% embutido (R$ 170k) — é o ponto de equilíbrio ideal entre alta chance de contemplação e não imobilizar capital em excesso.</div>
+      </div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icone">🤔</div>
+      <div>
+        <div class="obj-pergunta">"A 1ª parcela de R$ 15.555 não é muito alta?"</div>
+        <div class="obj-resposta">Ela é alta porque inclui a taxa de adesão de 2% sobre R$ 680.000 — que representa R$ 13.600 embutidos nessa parcela. Mas justamente por isso existe a opção de parcelar em até 3× no cartão de crédito: R$ 5.185 por mês, sem juros. A partir do 2º mês, a parcela cai para R$ 1.955.</div>
+      </div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icone">🤔</div>
+      <div>
+        <div class="obj-pergunta">"E se eu não for contemplado no mês 12?"</div>
+        <div class="obj-resposta">Você continua ofertando o mesmo lance nas assembleias seguintes — enquanto paga apenas R$ 1.955/mês. O mês 12 é uma estimativa conservadora com base na representatividade de 50%. Se demorar mais, não há penalidade — o processo segue normalmente.</div>
+      </div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icone">🤔</div>
+      <div>
+        <div class="obj-pergunta">"Sou obrigado a amortizar R$ 100k a cada 2 anos?"</div>
+        <div class="obj-resposta">Não — essa é uma simulação baseada no perfil financeiro do cliente, não uma obrigação. Você amortiza quando quiser e quanto puder: FGTS disponível, bônus, venda de ativo, reserva. Cada amortização, mesmo menor como R$ 30k, elimina parcelas do final do prazo sem alterar o valor mensal. É uma estratégia de saída antecipada, não uma exigência.</div>
+      </div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icone">🤔</div>
+      <div>
+        <div class="obj-pergunta">"Preciso ter os R$ 170.000 disponíveis agora?"</div>
+        <div class="obj-resposta">Não agora — você precisa tê-los no momento da oferta de lance, que pode ser em qualquer assembleia mensal. O mês 12 é estimativa: você escolhe quando oferecer. A Embracon aceita FGTS no lance próprio para imóveis. Isso dá tempo de organizar o capital com tranquilidade.</div>
+      </div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icone">🤔</div>
+      <div>
+        <div class="obj-pergunta">"Taxa de 18% não é alta demais?"</div>
+        <div class="obj-resposta">É diluída em 240 meses. O demonstrativo do plano mostra 1,0% ao ano efetivo — muito abaixo dos ~11% a.a. do financiamento SAC. Na 1ª parcela SAC de R$ 3.912, quase R$ 2.965 são apenas juros. No consórcio, cada parcela já amortiza o principal desde o primeiro mês.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cta">
+  <h2>Pronto para dar o próximo passo?</h2>
+  <p>Sua simulação personalizada está pronta. Vamos conversar sobre os detalhes?</p>
+  <a class="cta-btn" href="https://wa.me/5511985876570?text=Ol%C3%A1!%20Vi%20a%20simula%C3%A7%C3%A3o%20do%20cons%C3%B3rcio%20de%20im%C3%B3vel%20e%20quero%20saber%20mais.">Falar com a Berk Group no WhatsApp</a>
+  <div class="cta-rodape">Berk Group — Correspondente Embracon · Simulação personalizada para Mateus Cardoso, para fins informativos. Valores sujeitos a confirmação pelo administrador. As parcelas são reajustadas anualmente pelo INCC. Financiamento simulado como SFI Itaú ~11% a.a. efetivo, tabela SAC, 360 meses, entrada de R$ 170.000, financiado R$ 340.000. Contemplação estimada na parcela 12 com base no lance de 50% — não constitui garantia. A simulação de amortizações com R$ 30k a cada 2 anos é meramente ilustrativa, baseada no perfil do cliente. Parcelamento da 1ª parcela em cartão de crédito sujeito a disponibilidade e aprovação.</div>
+</div>
+
+<script>
+new Chart(document.getElementById('chartParcelas'),{type:'bar',data:{labels:['100 meses','120 meses','150 meses','200 meses','240 meses ★'],datasets:[{label:'Parcela mensal (demais)',data:[4692,3910,3128,2346,1955],backgroundColor:['#B4B2A9','#B4B2A9','#85B7EB','#5DCAA5','#0F6E56'],borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'R$ '+ctx.parsed.y.toLocaleString('pt-BR')}}},scales:{x:{grid:{display:false},ticks:{color:'#888'}},y:{grid:{color:'rgba(0,0,0,0.06)'},ticks:{color:'#888',callback:v=>'R$ '+(v/1000).toFixed(1)+'k'}}}}});
+
+new Chart(document.getElementById('chartComparativo'),{type:'bar',data:{labels:['Consórcio Embracon','Financiamento SAC (11%a.a.)','Compra à vista'],datasets:[{label:'Crédito recebido',data:[510000,510000,510000],backgroundColor:'#5DCAA5',borderRadius:[0,0,0],borderSkipped:false,stack:'total'},{label:'Custo adicional (taxas/juros)',data:[150308,535577,0],backgroundColor:['#EF9F27','#E24B4A','rgba(0,0,0,0)'],borderRadius:[6,6,0],borderSkipped:false,stack:'total'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': R$ '+ctx.parsed.y.toLocaleString('pt-BR'),footer:items=>'Total: R$ '+items.reduce((a,b)=>a+b.parsed.y,0).toLocaleString('pt-BR')}}},scales:{x:{grid:{display:false},ticks:{color:'#888'},stacked:true},y:{stacked:true,grid:{color:'rgba(0,0,0,0.06)'},ticks:{color:'#888',callback:v=>'R$ '+(v/1000).toFixed(0)+'k'}}}}});
+
+(function(){
+  const PARCELA=2127.924,PRAZO=213,TAXA=0.0008,AMORT=30000,FREQ=24,SI=510000;
+  const labels=[],semAmort=[SI],comAmort=[SI];
+  let s1=SI,s2=SI;
+  for(let m=1;m<=PRAZO;m++){
+    s1=Math.max(0,s1*(1+TAXA)-PARCELA);
+    s2=Math.max(0,s2*(1+TAXA)-PARCELA);
+    if(m%FREQ===0&&s2>0)s2=Math.max(0,s2-AMORT);
+    labels.push(m%24===0?'ano '+Math.round(m/12):'');
+    semAmort.push(Math.round(s1));
+    comAmort.push(Math.round(s2));
+    if(s2<=0&&s1<=0)break;
+  }
+  new Chart(document.getElementById('chartAmort'),{type:'line',data:{labels,datasets:[{label:'Sem amortização',data:semAmort,borderColor:'#B4B2A9',borderWidth:2,pointRadius:0,borderDash:[6,4],tension:0.3,fill:false},{label:'Simulação: R$ 30k a cada 2 anos',data:comAmort,borderColor:'#0F6E56',borderWidth:2.5,pointRadius:0,tension:0.2,fill:{target:'origin',above:'rgba(15,110,86,0.07)'}}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{color:'#5F5E5A',font:{size:12},boxWidth:24,padding:16}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': R$ '+ctx.parsed.y.toLocaleString('pt-BR')}}},scales:{x:{grid:{display:false},ticks:{color:'#888',autoSkip:false,maxRotation:0,callback:(v,i)=>labels[i]||''}},y:{min:0,grid:{color:'rgba(0,0,0,0.06)'},ticks:{color:'#888',callback:v=>'R$ '+Math.round(v/1000)+'k'}}}}});
+})();
+
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});},{threshold:0.08});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
